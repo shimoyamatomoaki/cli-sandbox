@@ -4,14 +4,27 @@
  */
 
 var program = require('commander');
+var ProgressBar = require('progress');
 
 program
     .version('0.0.1')
-    .usage('<keywords>')
+    .option('-n, --name [Your Name]', 'Specify your name.')
     .parse(process.argv);
 
-if(!program.args.length) {
+if(!program.name) {
   program.help();
 } else {
-  console.log('keywords: ' + program.args);
+  showProgressBar();
+}
+
+function showProgressBar() {
+  var bar = new ProgressBar('Waiting... [:bar] :percent :etas', { total: 10, complete: '*' });
+  var timer = setInterval(function(){
+    bar.tick();
+    if(bar.complete){
+      console.log('\ncomplete\n');
+      clearInterval(timer);
+      console.log('Hello %s', program.name);
+    }
+  }, 500);
 }
